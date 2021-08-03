@@ -7,7 +7,6 @@ class CreatePlants < ActiveRecord::Migration[6.1]
       t.string :planting_dates
       t.text :icon
       t.string :category
-      t.belongs_to :garden
 
       t.timestamps
     end
