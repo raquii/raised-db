@@ -5,4 +5,6 @@ class Plant < ActiveRecord::Base
     validates :days_to_harvest, presence: true
 
     has_many :notes
+    has_many :plots
+    has_many :gardens, through: :plots
 end

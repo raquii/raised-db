@@ -8,4 +8,7 @@ class Garden < ActiveRecord::Base
         message: "%{value} is not a valid depth" }
     validates :hardiness_zone, length: { in: 1..3,
         message: "%{value} is not a valid zone" }
+
+    has_many :plants, through: :plots
+    has_many :plots
 end
