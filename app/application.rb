@@ -21,24 +21,56 @@ class Application
 
             return [200, { 'Content-Type' => 'application/json' }, [ {:plants => plants}.to_json ]]
 
-        elsif req.path.match(/plants/) && req.post?
+        elsif req.path.match(/gardens/) && req.get?
+
+            gardens = Garden.all.map do |garden|
+                {
+                    id: garden.id, 
+                    name: garden.name, 
+                    length: garden.length, 
+                    width: garden.width, 
+                    depth: garden.depth,
+                    hardiness_zone: garden.hardiness_zone,
+            
+                    plots: garden.plots.all.map do |plot|
+                        {plant: Plant.find(plot.plant_id).name, image:Plant.find(plot.plant_id).icon}
+                    end
+                }
+            end
+
+            return [200, { 'Content-Type' => 'application/json' }, [ {:gardens => gardens}.to_json ]]
+           
+        elsif req.path.match(/gardens/) && req.post?
 
             data = JSON.parse req.body.read
-            plant = Plant.create(
-                name: data["name"], 
-                per_sq_ft: data["sqFt"], 
-                days_to_harvest: data["daysToHarvest"], 
-                planting_dates: data["plantingDates"],
-                icon: data["icon"],
-                category: data["category"]
+            
+            garden = Garden.create(
+                name: data.name, 
+                length: data.length, 
+                width: data.width, 
+                depth: data.depth,
+                hardiness_zone: data.hardiness_zone
             )
-            p_note = Note.create(category: "planting", content: data["plantingNotes"], plant_id: plant.id)
-            g_note = Note.create(category: "growing", content: data["growingNotes"], plant_id: plant.id)
-            h_note = Note.create(category: "harvesting", content: data["harvestingNotes"], plant_id: plant.id)
-                  
-            res_plant = {id: plant.id, name: plant.name, category: plant.category}
-      
-            return [200, { 'Content-Type' => 'application/json' }, [ {:plant => res_plant}.to_json ]]  
+                
+            res_garden = {id: garden.id, name: garden.name}
+    
+            return [200, { 'Content-Type' => 'application/json' }, [ {:garden => res_garden}.to_json ]]  
+         
+        elsif req.path.match(/gardens/) && req.patch?
+
+            data = JSON.parse req.body.read
+            garden = Garden.update(
+                data.id,
+                name: data.name, 
+                length: data.length, 
+                width: data.width, 
+                depth: data.depth,
+                hardiness_zone: data.hardiness_zone
+            )
+                
+            res_garden = {id: garden.id, name: garden.name}
+
+            return [200, { 'Content-Type' => 'application/json' }, [ {:garden => res_garden}.to_json ]]  
         end   
     end
 end
