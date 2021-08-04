@@ -30,7 +30,6 @@ class Application
                     length: garden.length, 
                     width: garden.width, 
                     depth: garden.depth,
-                    hardiness_zone: garden.hardiness_zone,
             
                     plots: garden.plots.all.map do |plot|
                         {plant: Plant.find(plot.plant_id).name, image:Plant.find(plot.plant_id).icon}
@@ -45,11 +44,10 @@ class Application
             data = JSON.parse req.body.read
             
             garden = Garden.create(
-                name: data.name, 
-                length: data.length, 
-                width: data.width, 
-                depth: data.depth,
-                hardiness_zone: data.hardiness_zone
+                name: data["name"], 
+                length: data["length"], 
+                width: data["width"], 
+                depth: data["depth"]
             )
                 
             res_garden = {id: garden.id, name: garden.name}
@@ -61,11 +59,10 @@ class Application
             data = JSON.parse req.body.read
             garden = Garden.update(
                 data.id,
-                name: data.name, 
-                length: data.length, 
-                width: data.width, 
-                depth: data.depth,
-                hardiness_zone: data.hardiness_zone
+                name: data["name"], 
+                length: data["length"], 
+                width: data["width"], 
+                depth: data["depth"]
             )
                 
             res_garden = {id: garden.id, name: garden.name}
