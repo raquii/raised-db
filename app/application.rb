@@ -4,6 +4,25 @@ class Application
         req = Rack::Request.new(env)
 
         if req.path.match(/plants/) && req.get?
+            id = req.path.split("/plants/").last
+            if id.to_i > 0
+                plant = [Plant.find(id)].map do |plant|
+                    {
+                        id: plant.id, 
+                        name: plant.name, 
+                        per_sq_ft: plant.per_sq_ft, 
+                        days_to_harvest: plant.days_to_harvest, 
+                        planting_dates: plant.planting_dates,
+                        icon: plant.icon,
+                        category: plant.category,
+                        notes: plant.notes.all.map do |note|
+                            {type: note.category, content:note.content}
+                        end
+                    }
+                end
+                
+                return [200, { 'Content-Type' => 'application/json' }, [ {:plant => plant}.to_json ]]
+            end
             plants = Plant.all.map do |plant|
                 {
                     id: plant.id, 
