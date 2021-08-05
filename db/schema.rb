@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_03_155942) do
+ActiveRecord::Schema.define(version: 2021_08_05_210253) do
 
   create_table "gardens", force: :cascade do |t|
     t.string "name"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 2021_08_03_155942) do
     t.integer "garden_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "position"
     t.index ["garden_id"], name: "index_plots_on_garden_id"
     t.index ["plant_id"], name: "index_plots_on_plant_id"
   end
