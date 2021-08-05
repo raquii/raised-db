@@ -21,7 +21,7 @@ class Application
                     }
                 end
                 
-                return [200, { 'Content-Type' => 'application/json' }, [ {:plant => plant}.to_json ]]
+                return [200, { 'Content-Type' => 'application/json' }, [ {:plants => plant}.to_json ]]
             end
             plants = Plant.all.map do |plant|
                 {
@@ -41,6 +41,23 @@ class Application
             return [200, { 'Content-Type' => 'application/json' }, [ {:plants => plants}.to_json ]]
 
         elsif req.path.match(/gardens/) && req.get?
+            id = req.path.split("/gardens/").last
+            if id.to_i > 0
+                garden = [Garden.find(id)].map do |garden|
+                    {
+                        id: garden.id, 
+                        name: garden.name, 
+                        length: garden.length, 
+                        width: garden.width, 
+                        depth: garden.depth,
+                        plots: garden.plots.all.map do |plot|
+                            {plant: Plant.find(plot.plant_id).name, image:Plant.find(plot.plant_id).icon}
+                        end
+                    }
+                end
+                
+                return [200, { 'Content-Type' => 'application/json' }, [ {:gardens => garden}.to_json ]]
+            end
 
             gardens = Garden.all.map do |garden|
                 {
