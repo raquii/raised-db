@@ -21,7 +21,7 @@ class Application
                     }
                 end
                 
-                return [200, { 'Content-Type' => 'application/json' }, [ {:plants => plant}.to_json ]]
+                return [200, { 'Content-Type' => 'application/json' }, [ {:plant => plant}.to_json ]]
             end
             plants = Plant.all.map do |plant|
                 {
@@ -51,7 +51,7 @@ class Application
                         width: garden.width, 
                         depth: garden.depth,
                         plots: garden.plots.all.map do |plot|
-                            {plant: Plant.find(plot.plant_id).name, image:Plant.find(plot.plant_id).icon}
+                            {plant_name: Plant.find(plot.plant_id).name, plant_id: plot.plant_id, garden_id:plot.plant_id, position:plot.position}
                         end
                     }
                 end
@@ -93,17 +93,16 @@ class Application
         elsif req.path.match(/gardens/) && req.patch?
 
             data = JSON.parse req.body.read
-            garden = Garden.update(
-                data.id,
-                name: data["name"], 
-                length: data["length"], 
-                width: data["width"], 
-                depth: data["depth"]
+            plot = Plot.find_or_create_by(
+                garden_id: data["garden_id"], 
+                position: data["position"] 
             )
-                
-            res_garden = {id: garden.id, name: garden.name}
 
-            return [200, { 'Content-Type' => 'application/json' }, [ {:garden => res_garden}.to_json ]]  
+            plot.update(plant_id: data["plant_id"]) 
+
+            res_plot = {id: plot.id, plant_id: plot.plant_id, plant_name: Plant.find(plot.plant_id).name}
+
+            return [200, { 'Content-Type' => 'application/json' }, [ {:plot => res_plot}.to_json ]]  
         end   
     end
 end
