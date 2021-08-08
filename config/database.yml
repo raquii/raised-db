@@ -1,5 +1,22 @@
-development:
-  adapter: sqlite3
-  database: db/raised.sqlite3
+# development:
+#   adapter: sqlite3
+#   database: db/raised.sqlite3
+#   pool: 5
+#   timeout: 5000
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
   pool: 5
-  timeout: 5000
+
+development:
+  <<: *default
+  database: raised_dev
+
+test:
+  <<: *default
+  database: raised_test
+
+production:
+  <<: *default
+  database: raised

@@ -20,6 +20,7 @@ gem "rack-cors", "~> 1.1"
 
 gem "rack", "~> 2.2"
 
-gem "sqlite3", "~> 1.4"
-
 gem "shotgun", "~> 0.9.2"
+
+
+gem "pg", "~> 1.2"
